@@ -1,4 +1,5 @@
 import scrapy
+import json
 from scrapy.exporters import JsonItemExporter
 
 
@@ -76,19 +77,30 @@ class LuluhypermarketSpider(scrapy.Spider):
         product_details['price'] = price
         product_details['summary'] = product_summary_list
 
+        self.items.append(product_details)
         # print(f"\n{product_details}")
     
 
     def closed(self, reason):
         # open the file for writing
-        file = open('luluhypermarket.json', 'wb')
+        print('\nFinished\n')
+        print('Total product scrapped: ', len(self.items))
+
+        with open('luluhypermarket.json', 'w') as file:
+            # write the data to the file
+            json.dump(self.items, file)
+        # file = open('luluhypermarket.json', 'wb')
+
+        # file.write(json.dumps(self.items))
+        # file.close()
         # create an instance of JsonItemExporter
-        exporter = JsonItemExporter(file)
-        # start the export process
-        exporter.start_exporting()
-        # export the data
-        exporter.export_items(self.items)
-        # finish the export process
-        exporter.finish_exporting()
-        # close the file
-        file.close()
+        # exporter = JsonItemExporter(file)
+        # # start the export process
+        # exporter.start_exporting()
+        # # export the data
+        # # exporter.export_items(self.items)
+        # exporter.export_item(self.items)
+        # # finish the export process
+        # exporter.finish_exporting()
+        # # close the file
+        # file.close()
